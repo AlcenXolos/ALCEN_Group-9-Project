@@ -16,17 +16,17 @@ const shoes = [
 
 function loadProducts(category = "All Shoes") {
     const productList = document.getElementById("product-list");
-    let filteredShoes = category === "All Shoes" ? shoes : shoes.filter(shoe => shoe.category === category);
-    let activeCategory = document.getElementById("filtered-category")
+    const filteredShoes = category === "All Shoes" ? shoes : shoes.filter(shoe => shoe.category === category);
+    const activeCategory = document.getElementById("filtered-category");
     
     productList.innerHTML = "";
     filteredShoes.forEach(shoe => {
-        let shoeCard = document.createElement("li");
+        const shoeCard = document.createElement("li");
         shoeCard.classList.add("col-lg-4", "col-md-6", "col-sm-12", "mb-4");
         shoeCard.innerHTML = `
                 <a href="product-details.html?id=${shoe.id}" class="product-card"> 
                     <div class="shoe-image-container">
-                        <img class="img-fluid w-100" src="${shoe.img}" alt="${shoe.name}" >
+                        <img class="img-fluid w-100" src="${shoe.img}" alt="${shoe.name}">
                     </div>
                     <div class="d-flex align-items-center justify-content-between py-3 gap-2">
                         <div class="shoe-name-container"> 
@@ -44,13 +44,6 @@ function loadProducts(category = "All Shoes") {
     activeCategory.innerText = category;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".product-card").forEach(link => {
-        link.style.color = "inherit";
-        link.style.textDecoration = "none";
-    });
-});
-
 function setupCategoryFilters() {
     document.querySelectorAll(".category-item").forEach(categoryItem => {
         categoryItem.addEventListener("click", (event) => {
@@ -62,29 +55,36 @@ function setupCategoryFilters() {
 }
 
 function setupEventListeners() {
-    document.getElementById("login-btn").addEventListener("click", showLogin);
+    /* Edited the login button */
+    document.getElementById("login-btn").addEventListener("click", () => {
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show(); 
+    });
     document.getElementById("signup-btn").addEventListener("click", showSignup);
     document.getElementById("logout-btn").addEventListener("click", logout);
-}
-
-function showLogin() {
-    let user = prompt("Enter username:");
-    if (user) {
-        localStorage.setItem("user", user);
-        checkUserLogin();
-    }
+    /* Added login form */
+    document.getElementById("loginForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const user = document.getElementById("usernameInput").value;
+        if (user) {
+            localStorage.setItem("user", user);
+            checkUserLogin();
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            loginModal.hide();
+        }
+    });
 }
 
 function showSignup() {
-    let user = prompt("Enter new username:");
+    const user = prompt("Enter new username:");
     if (user) {
         localStorage.setItem("user", user);
         checkUserLogin();
     }
 }
-
+/* Added modal show for login*/
 function checkUserLogin() {
-    let user = localStorage.getItem("user");
+    const user = localStorage.getItem("user");
     if (user) {
         document.getElementById("auth-buttons").classList.add("d-none");
         document.getElementById("user-info").classList.remove("d-none");
